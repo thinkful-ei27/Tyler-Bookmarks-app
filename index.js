@@ -14,7 +14,7 @@ $.fn.extend({
 });
 
 const captureInput = function(){
-  $('.add-a-bookmark').submit(event => {
+  $('.bookmark-staging-area').submit(event => {
     event.preventDefault();
     const userjson = $(event.target).serializeJson();
     console.log(userjson);
@@ -34,9 +34,33 @@ function addBookmark(jsonobject, onSuccess, onError){
   });
 };
 
+function addUserForm(){
+  $('.js-bookmark-control').submit(event => {
+    event.preventDefault();
+    console.log('youre clicking add a bookmark');
+    // STORE.addingBookmark = true;
+    $("div.bookmark-staging-area").html(`
+    <form action = "" class = "add-a-bookmark">
+    <fieldset class="add-bookmark-fields">
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title">
+      <label for="url">URL</label>
+      <input type="url" name="url" id="url">
+      <label for="description">Description</label>
+      <textarea name="desc" id="description"></textarea>
+      <label for="rating">Rating</label>
+      <input type="number" name="rating" id="rating">
+      <button type="submit">Add Bookmark</button>
+    </fieldset>
+    </form>`);
+  });
+}
+
 const testSuccess = function(){console.log('something worked')};
 const testError = function(){console.log('something is wrong')}
 
 $(document).ready(function () {
   captureInput();
+  addUserForm();
+  
 });

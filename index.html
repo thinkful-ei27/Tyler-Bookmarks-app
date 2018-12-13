@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>My Bookmarks</h1>
-    <form id = "js-bookmark-control">
+    <form action ="" class = "js-bookmark-control">
     <input type="submit" class = "js-bookmark-adder" value = "Add a bookmark">
     <label for = "sort-selector">Sort by minimum rating:</label>
     <select id = "sort-selector">
@@ -21,25 +21,15 @@
         <option value="5">5</option>
     </select>
     </form>
-    <form action="" class="add-a-bookmark">
-      <fieldset class="add-bookmark-fields">
-        <label for="title">Title</label>
-        <input type="text" name="title" id="title">
-        <label for="url">URL</label>
-        <input type="url" name="url" id="url">
-        <label for="description">Description</label>
-        <textarea name="desc" id="description"></textarea>
-        <label for="rating">Rating</label>
-        <input type="number" name="rating" id="rating">
-        <button type="submit">Add Bookmark</button>
-      </fieldset>
-      
-    </form>
-    
+
+    <div class ="bookmark-staging-area">
+    </div>
     <ul id = "Bookmark list">
     </ul>
 </body>
 </html>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="STORE.js"></script>
 <script type="text/javascript" src="Api.js"></script>
+<script type="text/javascript" src="domManipulators.js"></script>
 <script type="text/javascript" src="index.js"></script>
