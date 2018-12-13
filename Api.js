@@ -14,17 +14,17 @@ const Api = (function() {
     }
   });
   
-  const captureInput = function(){
+  const captureInput = function(){ //this function sends the userform input to the server
     $('.bookmark-staging-area').submit(event => {
       event.preventDefault();
       const userjson = $(event.target).serializeJson();
       console.log(userjson);
-      addBookmark(userjson, testSuccess, testError);
+      addBookmarktoServer(userjson, testSuccess, testError);
       
     });
   };
   
-  function addBookmark(jsonobject, onSuccess, onError){
+  function addBookmarktoServer(jsonobject, onSuccess, onError){
     $.ajax({
       url:BASE_URL,
       method: 'POST',
@@ -33,16 +33,26 @@ const Api = (function() {
       success: onSuccess,
       error: onError
     });
+  }
+
+  const getBookmarkData = function(callback){
+    $.ajax({
+      url: BASE_URL,
+      method: 'GET',
+      success: callback
+    });
   };
+
   
   
   
-  const testSuccess = function(){console.log('something worked')};
-  const testError = function(){console.log('something is wrong')}
+  const testSuccess = function(){console.log('something worked');};
+  const testError = function(){console.log('something is wrong');};
 
 
   return{
     captureInput,
+    getBookmarkData
   };
 
 
