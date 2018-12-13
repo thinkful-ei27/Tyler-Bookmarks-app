@@ -1,4 +1,7 @@
 'use strict';
+const BASE_URL = 'https://thinkful-list-api.herokuapp.com/tyler/bookmarks';
+
+
 $.fn.extend({
   serializeJson: function () {
     const formData = new FormData(this[0]);
@@ -10,13 +13,29 @@ $.fn.extend({
   }
 });
 
-function captureInput(){
+const captureInput = function(){
   $('.add-a-bookmark').submit(event => {
     event.preventDefault();
-    const testData = $(event.target).serializeJson();
-    console.log(testData);
+    const userjson = $(event.target).serializeJson();
+    console.log(userjson);
+    addBookmark(userjson, testSuccess, testError);
+    
   });
-}
+};
+
+function addBookmark(jsonobject, onSuccess, onError){
+  $.ajax({
+    url:BASE_URL,
+    method: 'POST',
+    contentType: 'application/json',
+    data: jsonobject,
+    success: onSuccess,
+    error: onError
+  });
+};
+
+const testSuccess = function(){console.log('something worked')};
+const testError = function(){console.log('something is wrong')}
 
 $(document).ready(function () {
   captureInput();
