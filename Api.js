@@ -3,18 +3,18 @@ const Api = (function() {
 
   const BASE_URL = 'https://thinkful-list-api.herokuapp.com/tyler/bookmarks';
 
-  
+ 
   
  
   
-  function addBookmarktoServer(jsonobject, onSuccess, onError){
+  function addBookmarktoServer(jsonobject, callback, error){
     $.ajax({
       url:BASE_URL,
       method: 'POST',
       contentType: 'application/json',
       data: jsonobject,
-      success: onSuccess,
-      error: onError
+      success: callback,
+      error: error
     });
   }
 

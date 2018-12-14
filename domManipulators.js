@@ -10,13 +10,13 @@ const DomManipulators = (function(){
           <form action = "" class = "add-a-bookmark">
           <fieldset class="add-bookmark-fields">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title">
+            <input type="text" name="title" id="title" class = "new-title">
             <label for="url">URL</label>
-            <input type="url" name="url" id="url">
+            <input type="url" name="url" id="url" class = "new-url">
             <label for="description">Description</label>
-            <textarea name="desc" id="description"></textarea>
+            <textarea name="desc" id="description" class ="new-desc"></textarea>
             <label for="rating">Rating</label>
-            <input type="number" name="rating" id="rating">
+            <input type="number" name="rating" id="rating" class = "new-rating">
             <button type="submit">Add Bookmark</button>
           </fieldset>
           </form>`);
@@ -47,6 +47,7 @@ const DomManipulators = (function(){
       <input type = "button" id = "visit">
       </div>`;
     }
+    
   };
 
   function getItemIdFromElement(item) {
@@ -100,16 +101,39 @@ const DomManipulators = (function(){
     }
   });
 
-  const captureInput = function(){ //this function sends the userform input to the server
+  const handleSubmitNew = function(){ //this function sends the userform input to the server
     $('.bookmark-staging-area').submit(event => {
       event.preventDefault();
+      let bookmarkName = $('.new-title').val();
+      let bookmarkUrl = $('.new-url').val();
+      let bookmarkDesc = $('.new-desc').val();
+      let bookmarkRate = $('.new-rating').val();
+
+      let newBookmark = {
+        title: bookmarkName,
+        url: bookmarkUrl,
+        desc: bookmarkDesc,
+        rating: bookmarkRate,
+        expanded: false
+      };
+      
+      
+      // console.log(bookmarkName, bookmarkUrl, bookmarkDesc, bookmarkRate);
+
       const userjson = $(event.target).serializeJson();
       console.log(userjson);
-      Api.addBookmarktoServer(userjson, testSuccess, testError); 
-      render();
+      Api.addBookmarktoServer(userjson, function(){
+        Store.addItem(newBookmark);
+        render();
+      }, testError);
+        
+      
     });
     
-  };
+  }; 
+    
+    
+  
   const testSuccess = function(){console.log('something worked');};
   const testError = function(){console.log('something is wrong');};
 
@@ -119,7 +143,7 @@ const DomManipulators = (function(){
   return{
     addUserForm,
     render,
-    captureInput,
+    handleSubmitNew,
     handleExpandedClick,
     handleDeleteClick
 

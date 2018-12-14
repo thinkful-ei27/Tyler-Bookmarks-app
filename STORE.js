@@ -22,7 +22,6 @@ const Store = (function() {
   
 
 
-
   return{
     bookmarks: [],
     addingBookmark: false,

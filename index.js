@@ -3,7 +3,7 @@
 $(document).ready(function() {
   DomManipulators.render();
   DomManipulators.addUserForm();
-  DomManipulators.captureInput();
+  DomManipulators.handleSubmitNew();
   DomManipulators.handleExpandedClick();
   DomManipulators.handleDeleteClick();
   Api.getBookmarkData((bookmarks) => {
