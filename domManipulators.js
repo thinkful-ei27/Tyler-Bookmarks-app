@@ -25,6 +25,7 @@ const DomManipulators = (function(){
    
 
   const generateHtml = function(bookmark){
+    if(bookmark.expanded === false){
     return  `<div style="border: 1px solid black;">
                 <header>${bookmark.title}</header>
                 <p>${bookmark.rating}</p>
@@ -32,8 +33,22 @@ const DomManipulators = (function(){
                 <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
                 <div class = "js-expanded-placeholder">
                 </div>
-                </div>`;
-    
+                </div>`;}
+    else if(bookmark.expanded === true){
+      return `<div style="border: 1px solid black;">
+      <header>${bookmark.title}</header>
+      <p>${bookmark.rating}</p>
+      <label for = "expand">Expand</label>
+      <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
+      <div class = "js-expanded-placeholder">
+      </div>
+      <p>${bookmark.desc}</p>
+      <label for = "delete">Delete Bookmark</label>
+      <input type ="button" id ="delete">
+      <label for = "visit">Visit Site</label>
+      <input type = "button" id = "visit">
+      </div>`;
+    }
   };
   const expandedHtml = function(bookmark){
     return `<div style="border: 1px solid black;">
