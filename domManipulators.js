@@ -23,24 +23,56 @@ const DomManipulators = (function(){
     });
   };
    
-  
 
   const generateHtml = function(bookmark){
-
     return  `<div style="border: 1px solid black;">
                 <header>${bookmark.title}</header>
                 <p>${bookmark.rating}</p>
                 <label for = "expand">Expand</label>
-                <input type="button" id ="expand">
+                <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
+                <div class = "js-expanded-placeholder">
+                </div>
                 </div>`;
     
   };
+  const expandedHtml = function(bookmark){
+    return `<div style="border: 1px solid black;">
+            <header>${bookmark.title}</header>
+            <p>${bookmark.rating}</p>
+            <label for = "expand">Expand</label>
+            <input type="button" id ="expand" class = "expand">
+            <div class = "js-expanded-placeholder">
+            </div>
 
+            <p>${bookmark.desc}</p>
+            <label for = "delete">Delete Bookmark</label>
+            <input type ="button" id ="delete">
+            <label for = "visit">Visit Site</label>
+            <input type = "button" id = "visit">
+            </div>`;
+  };
+
+  function getItemIdFromElement(item) {
+    return $(item)
+      .closest('.expand')
+      .data('item-id');
+  }
+
+  const handleExpandedClick = function(){
+    $('.js-bookmark-list').on('click', '.expand', function(event){
+      event.preventDefault();
+      const id = getItemIdFromElement(event.currentTarget);
+      console.log(id);
+      console.log('you are still clicking expand');
+      const item = Store.findById(id);
+      item.expanded = !item.expanded;
+      render();
+    });
+  };              
   
 
   const render = function(){
     let items = Store.bookmarks;
-
     const bookmarksString = generateString(items);
     $('.js-bookmark-list').html(bookmarksString);
   };
@@ -80,8 +112,8 @@ const DomManipulators = (function(){
   return{
     addUserForm,
     render,
-    captureInput
-    
+    captureInput,
+    handleExpandedClick
 
   };
 
