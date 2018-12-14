@@ -43,8 +43,7 @@ const DomManipulators = (function(){
       <p>${bookmark.desc}</p>
       <label for = "delete">Delete Bookmark</label>
       <input type ="button" id ="delete" class = "js-delete" data-item-id = ${bookmark.id}>
-      <label for = "visit">Visit Site</label>
-      <input type = "button" id = "visit">
+      <a target="_blank" href="${bookmark.url}">Visit Site</a>
       </div>`;
     }
     
@@ -104,26 +103,28 @@ const DomManipulators = (function(){
   const handleSubmitNew = function(){ //this function sends the userform input to the server
     $('.bookmark-staging-area').submit(event => {
       event.preventDefault();
-      let bookmarkName = $('.new-title').val();
-      let bookmarkUrl = $('.new-url').val();
-      let bookmarkDesc = $('.new-desc').val();
-      let bookmarkRate = $('.new-rating').val();
+      // let bookmarkName = $('.new-title').val();
+      // let bookmarkUrl = $('.new-url').val();
+      // let bookmarkDesc = $('.new-desc').val();
+      // let bookmarkRate = $('.new-rating').val();
 
-      let newBookmark = {
-        title: bookmarkName,
-        url: bookmarkUrl,
-        desc: bookmarkDesc,
-        rating: bookmarkRate,
-        expanded: false
-      };
+      // let newBookmark = {
+      //   title: bookmarkName,
+      //   url: bookmarkUrl,
+      //   desc: bookmarkDesc,
+      //   rating: bookmarkRate,
+      //   expanded: false
+      // };
       
       
       // console.log(bookmarkName, bookmarkUrl, bookmarkDesc, bookmarkRate);
 
       const userjson = $(event.target).serializeJson();
       console.log(userjson);
-      Api.addBookmarktoServer(userjson, function(){
-        Store.addItem(newBookmark);
+      Api.addBookmarktoServer(userjson, function(response){
+        console.log(response);
+        response.expanded = false;
+        Store.addItem(response);
         render();
       }, testError);
         
