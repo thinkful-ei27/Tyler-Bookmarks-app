@@ -5,7 +5,7 @@ const DomManipulators = (function(){
     $('.js-bookmark-control').submit(event => {
       event.preventDefault();
       console.log('youre clicking add a bookmark');
-      // STORE.addingBookmark = true;
+      Store.addingBookmark = !Store.addingBookmark;
       $('div.bookmark-staging-area').html(`
           <form action = "" class = "add-a-bookmark">
           <fieldset class="add-bookmark-fields">
@@ -22,10 +22,67 @@ const DomManipulators = (function(){
           </form>`);
     });
   };
+   
+  
+
+  const generateHtml = function(bookmark){
+
+    return  `<div style="border: 1px solid black;">
+                <header>${bookmark.title}</header>
+                <p>${bookmark.rating}</p>
+                <label for = "expand">Expand</label>
+                <input type="button" id ="expand">
+                </div>`;
+    
+  };
+
+  
+
+  const render = function(){
+    let items = Store.bookmarks;
+
+    const bookmarksString = generateString(items);
+    $('.js-bookmark-list').html(bookmarksString);
+  };
+  
+  function generateString(bookmarks) {
+    const items = bookmarks.map((item) => generateHtml(item));
+    return items.join('');       
+  }
+
+  $.fn.extend({
+    serializeJson: function () {
+      const formData = new FormData(this[0]);
+      const jsonObj = {};
+      formData.forEach((val, key) => {
+        jsonObj[key] = val;
+      });
+      return JSON.stringify(jsonObj);
+    }
+  });
+
+  const captureInput = function(){ //this function sends the userform input to the server
+    $('.bookmark-staging-area').submit(event => {
+      event.preventDefault();
+      const userjson = $(event.target).serializeJson();
+      console.log(userjson);
+      Api.addBookmarktoServer(userjson, testSuccess, testError); 
+      render();
+    });
+    
+  };
+  const testSuccess = function(){console.log('something worked');};
+  const testError = function(){console.log('something is wrong');};
+
+ 
   
 
   return{
-    addUserForm
+    addUserForm,
+    render,
+    captureInput
+    
+
   };
 
 

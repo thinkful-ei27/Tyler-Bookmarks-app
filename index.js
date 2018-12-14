@@ -1,10 +1,12 @@
 'use strict';
 
-$(document).ready(function () {
-  Api.captureInput();
+$(document).ready(function() {
+  DomManipulators.render();
   DomManipulators.addUserForm();
-  Api.getBookmarkData(function(response){
-    Store.bookmarks.push(...response);
-    console.log(Store.bookmarks);
+  DomManipulators.captureInput();
+
+  Api.getBookmarkData((bookmarks) => {
+    bookmarks.forEach((bookmark) => Store.addItem(bookmark));
+    DomManipulators.render();
   });
 });

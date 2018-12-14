@@ -1,11 +1,24 @@
 'use strict';
-const BASE_URL = 'https://thinkful-list-api.herokuapp.com/tyler/bookmarks';
 const Store = (function() {
 
-  const addBookmark = function(bookmark){
-    this.bookmarks.push(bookmark);
+  
+  
+  const findById = function(id) {
+    return this.bookmarks.find(item => item.id === id);
   };
 
+  const addItem = function(item) {
+    this.bookmarks.push(item);
+  };
+
+  const findAndDelete = function(id) {
+    this.bookmarks = this.bookmarks.filter(item => item.id !== id);
+  };
+
+  const setError = function(error) {
+    this.error = error;
+  };
+  
   
 
 
@@ -15,8 +28,12 @@ const Store = (function() {
     addingBookmark: false,
     errorMessage: '',
     filterValue: 1,
-    addBookmark
     
+    
+    findById,
+    addItem,
+    findAndDelete,
+    setError
   };
 
 }());
