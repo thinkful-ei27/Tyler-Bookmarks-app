@@ -28,7 +28,7 @@ const Api = (function() {
 
   const deleteItem = function(id, callback){
     $.ajax({
-      url: BASE_URL,
+      url: BASE_URL+'/'+id,
       method: 'DELETE',
       success: callback,
     });

@@ -26,7 +26,7 @@ const DomManipulators = (function(){
 
   const generateHtml = function(bookmark){
     if(bookmark.expanded === false){
-    return  `<div style="border: 1px solid black;">
+      return  `<div style="border: 1px solid black;">
                 <header>${bookmark.title}</header>
                 <p>${bookmark.rating}</p>
                 <label for = "expand">Expand</label>
@@ -40,36 +40,18 @@ const DomManipulators = (function(){
       <p>${bookmark.rating}</p>
       <label for = "expand">Expand</label>
       <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
-      <div class = "js-expanded-placeholder">
-      </div>
       <p>${bookmark.desc}</p>
       <label for = "delete">Delete Bookmark</label>
-      <input type ="button" id ="delete">
+      <input type ="button" id ="delete" class = "js-delete" data-item-id = ${bookmark.id}>
       <label for = "visit">Visit Site</label>
       <input type = "button" id = "visit">
       </div>`;
     }
   };
-  const expandedHtml = function(bookmark){
-    return `<div style="border: 1px solid black;">
-            <header>${bookmark.title}</header>
-            <p>${bookmark.rating}</p>
-            <label for = "expand">Expand</label>
-            <input type="button" id ="expand" class = "expand">
-            <div class = "js-expanded-placeholder">
-            </div>
-
-            <p>${bookmark.desc}</p>
-            <label for = "delete">Delete Bookmark</label>
-            <input type ="button" id ="delete">
-            <label for = "visit">Visit Site</label>
-            <input type = "button" id = "visit">
-            </div>`;
-  };
 
   function getItemIdFromElement(item) {
     return $(item)
-      .closest('.expand')
+      .closest('input')
       .data('item-id');
   }
 
@@ -85,6 +67,16 @@ const DomManipulators = (function(){
     });
   };              
   
+  const handleDeleteClick = function(){
+    $('.js-bookmark-list').on('click', '.js-delete', event => {
+      const id = getItemIdFromElement(event.currentTarget);
+      console.log('you clicked delete');
+      Api.deleteItem(id, function(){
+        Store.findAndDelete(id);
+        render();
+      });
+    });
+  };
 
   const render = function(){
     let items = Store.bookmarks;
@@ -128,7 +120,8 @@ const DomManipulators = (function(){
     addUserForm,
     render,
     captureInput,
-    handleExpandedClick
+    handleExpandedClick,
+    handleDeleteClick
 
   };
 
