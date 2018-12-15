@@ -2,7 +2,7 @@
 const DomManipulators = (function(){
 
   const addUserForm = function(){
-    $('.js-bookmark-control').submit(event => {
+    $('.js-bookmark-adder').on('click', (event => {
       event.preventDefault();
       console.log('youre clicking add a bookmark');
       Store.addingBookmark = !Store.addingBookmark;
@@ -20,9 +20,18 @@ const DomManipulators = (function(){
             <button type="submit">Add Bookmark</button>
           </fieldset>
           </form>`);
-    });
+    }));
   };
-   
+  
+  const handleFilterClick = function(){
+    $('.js-filter').on('click', (event => {
+      event.preventDefault();
+      console.log('you have targeted the filter button');
+      let filterval = $('#sort-selector').val();
+      Store.filterValue = parseInt(filterval);
+      render();
+    }));
+  };
 
   const generateHtml = function(bookmark){
     
@@ -82,6 +91,25 @@ const DomManipulators = (function(){
 
   const render = function(){
     let items = Store.bookmarks;
+
+    if (Store.filterValue === 2) {
+      items = Store.bookmarks.filter(item => item.rating > 1);
+    }
+
+    if (Store.filterValue === 3) {
+      items = Store.bookmarks.filter(item => item.rating > 2);
+    }
+
+    if (Store.filterValue === 4) {
+      items = Store.bookmarks.filter(item => item.rating > 3);
+    }
+
+    if (Store.filterValue === 5) {
+      items = Store.bookmarks.filter(item => item.rating === 5);
+    }
+
+
+
     const bookmarksString = generateString(items);
     $('.js-bookmark-list').html(bookmarksString);
   };
@@ -148,7 +176,8 @@ const DomManipulators = (function(){
     render,
     handleSubmitNew,
     handleExpandedClick,
-    handleDeleteClick
+    handleDeleteClick,
+    handleFilterClick
 
   };
 

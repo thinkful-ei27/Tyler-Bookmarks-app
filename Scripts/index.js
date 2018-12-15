@@ -6,6 +6,7 @@ $(document).ready(function() {
   DomManipulators.handleSubmitNew();
   DomManipulators.handleExpandedClick();
   DomManipulators.handleDeleteClick();
+  DomManipulators.handleFilterClick();
   Api.getBookmarkData((bookmarks) => {
     bookmarks.forEach((bookmark) => Store.addItem(bookmark));
     bookmarks.forEach((bookmark) => bookmark.expanded = false);
