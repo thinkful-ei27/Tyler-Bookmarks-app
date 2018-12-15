@@ -25,7 +25,9 @@ const DomManipulators = (function(){
    
 
   const generateHtml = function(bookmark){
-    if(bookmark.expanded === false){
+    
+    
+    if(!bookmark.expanded){
       return  `<div style="border: 1px solid black;">
                 <header>${bookmark.title}</header>
                 <p>${bookmark.rating}</p>
@@ -34,7 +36,7 @@ const DomManipulators = (function(){
                 <div class = "js-expanded-placeholder">
                 </div>
                 </div>`;}
-    else if(bookmark.expanded === true){
+    if(bookmark.expanded){
       return `<div style="border: 1px solid black;">
       <header>${bookmark.title}</header>
       <p>${bookmark.rating}</p>
@@ -46,7 +48,7 @@ const DomManipulators = (function(){
       <a target="_blank" href="${bookmark.url}">Visit Site</a>
       </div>`;
     }
-    
+  
   };
 
   function getItemIdFromElement(item) {
