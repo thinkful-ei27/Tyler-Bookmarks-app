@@ -11,11 +11,11 @@ const DomManipulators = (function(){
 
     return `
       <section class="error-content">
-        <p>UH OH! Somethings Wrong!</p>
-        <button id="cancel-error">X</button>
+        <p>Uh oh! Something's Wrong!</p>
+        <button id="cancel-error">Clear Error</button>
         <p>${message}</p>
-      </section>
-    `;
+      </section>`;
+    
   }
 
   const addUserForm = function(){
