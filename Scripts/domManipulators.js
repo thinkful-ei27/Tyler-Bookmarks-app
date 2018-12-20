@@ -1,12 +1,29 @@
 'use strict';
 const DomManipulators = (function(){
 
+  function serverError(error) {
+    let message = '';
+    if (error.responseJSON && error.responseJSON.message) {
+      message = error.responseJSON.message;
+    } else {
+      message = `${error.code}: Server Error`;
+    }
+
+    return `
+      <section class="error-content">
+        <p>UH OH! Somethings Wrong!</p>
+        <button id="cancel-error">X</button>
+        <p>${message}</p>
+      </section>
+    `;
+  }
+
   const addUserForm = function(){
     $('.js-bookmark-adder').on('click', (event => {
       event.preventDefault();
       console.log('youre clicking add a bookmark');
       Store.addingBookmark = !Store.addingBookmark;
-      $('div.bookmark-staging-area').html(`
+      $('.bookmark-staging-area').html(`
           <form action = "" class = "add-a-bookmark">
           <fieldset class="add-bookmark-fields">
             <label for="title">Title</label>
@@ -14,46 +31,51 @@ const DomManipulators = (function(){
             <label for="url">URL</label>
             <input type="url" name="url" id="url" class = "new-url">
             <label for="description">Description</label>
-            <textarea name="desc" id="description" class ="new-desc"></textarea>
+            <input type="text" name="desc" id="description" class ="new-desc"></input>
             <label for="rating">Rating</label>
-            <input type="number" name="rating" id="rating" class = "new-rating">
+            <input type="number" name="rating" id="rating" class = "new-rating" value = 1 min = 1 max = 5 >
             <button type="submit">Add Bookmark</button>
           </fieldset>
           </form>`);
-    }));
+      
+    }
+
+    ));
   };
+
+    
+  
   
   const handleFilterClick = function(){
     $('.js-filter').on('click', (event => {
       event.preventDefault();
       console.log('you have targeted the filter button');
       let filterval = $('#sort-selector').val();
-      Store.filterValue = parseInt(filterval);
+      Store.filterValue = filterval;
+      console.log(filterval);
       render();
     }));
   };
 
   const generateHtml = function(bookmark){
-    
-    
     if(!bookmark.expanded){
       return  `<div style="border: 1px solid black;">
                 <header>${bookmark.title}</header>
-                <p>${bookmark.rating}</p>
-                <label for = "expand">Expand</label>
-                <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
+                <p>Rating: ${bookmark.rating}</p>
+                <label for = "expand"></label>
+                <input type="button" id ="expand" class = "expand" value = "expand" data-item-id = ${bookmark.id}>
                 <div class = "js-expanded-placeholder">
                 </div>
                 </div>`;}
     if(bookmark.expanded){
-      return `<div style="border: 1px solid black;">
+      return `<div>
       <header>${bookmark.title}</header>
-      <p>${bookmark.rating}</p>
-      <label for = "expand">Expand</label>
-      <input type="button" id ="expand" class = "expand" data-item-id = ${bookmark.id}>
+      <p>Rating: ${bookmark.rating}</p>
+      <label for = "expand"></label>
+      <input type="button" id ="expand" class = "expand" value = "collapse" data-item-id = ${bookmark.id}>
       <p>${bookmark.desc}</p>
-      <label for = "delete">Delete Bookmark</label>
-      <input type ="button" id ="delete" class = "js-delete" data-item-id = ${bookmark.id}>
+      <label for = "delete"></label>
+      <input type ="button" id ="delete" class = "js-delete" value = "delete" data-item-id = ${bookmark.id}>
       <a target="_blank" href="${bookmark.url}">Visit Site</a>
       </div>`;
     }
@@ -89,27 +111,27 @@ const DomManipulators = (function(){
     });
   };
 
+  function closeError() {
+    $('.js-error-stage').on('click', '#cancel-error', () => {
+      Store.setError(null);
+      render();
+    });
+  }
+
   const render = function(){
+    if (Store.errorMessage) {
+      const someError = serverError(Store.errorMessage);
+      $('.js-error-stage').html(someError);
+    } else {
+      $('.js-error-stage').empty();
+    }
+
     let items = Store.bookmarks;
 
-    if (Store.filterValue === 2) {
-      items = Store.bookmarks.filter(item => item.rating > 1);
+    if(Store.filterValue){
+      items = Store.bookmarks.filter(item => item.rating >= Store.filterValue);
     }
-
-    if (Store.filterValue === 3) {
-      items = Store.bookmarks.filter(item => item.rating > 2);
-    }
-
-    if (Store.filterValue === 4) {
-      items = Store.bookmarks.filter(item => item.rating > 3);
-    }
-
-    if (Store.filterValue === 5) {
-      items = Store.bookmarks.filter(item => item.rating === 5);
-    }
-
-
-
+    
     const bookmarksString = generateString(items);
     $('.js-bookmark-list').html(bookmarksString);
   };
@@ -133,21 +155,8 @@ const DomManipulators = (function(){
   const handleSubmitNew = function(){ //this function sends the userform input to the server
     $('.bookmark-staging-area').submit(event => {
       event.preventDefault();
-      // let bookmarkName = $('.new-title').val();
-      // let bookmarkUrl = $('.new-url').val();
-      // let bookmarkDesc = $('.new-desc').val();
-      // let bookmarkRate = $('.new-rating').val();
-
-      // let newBookmark = {
-      //   title: bookmarkName,
-      //   url: bookmarkUrl,
-      //   desc: bookmarkDesc,
-      //   rating: bookmarkRate,
-      //   expanded: false
-      // };
       
-      
-      // console.log(bookmarkName, bookmarkUrl, bookmarkDesc, bookmarkRate);
+     
 
       const userjson = $(event.target).serializeJson();
       console.log(userjson);
@@ -155,30 +164,37 @@ const DomManipulators = (function(){
         console.log(response);
         response.expanded = false;
         Store.addItem(response);
+        Store.addingBookmark = !Store.addingBookmark;
+        $('.bookmark-staging-area').html('');
         render();
-      }, testError);
+      }, (error) => {
+        Store.setError(error);
+        render();
+      });
         
       
     });
-    
+    render();
   }; 
     
+  function handleItAll(){
+    handleExpandedClick();
+    handleDeleteClick();
+    handleFilterClick();
+    closeError();
+    handleSubmitNew();
+    addUserForm();
+  }
     
   
-  const testSuccess = function(){console.log('something worked');};
-  const testError = function(){console.log('something is wrong');};
+  
 
  
   
 
   return{
-    addUserForm,
-    render,
-    handleSubmitNew,
-    handleExpandedClick,
-    handleDeleteClick,
-    handleFilterClick
-
+    handleItAll,
+    render
   };
 
 

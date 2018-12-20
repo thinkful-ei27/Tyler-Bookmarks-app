@@ -16,7 +16,7 @@ const Store = (function() {
   };
 
   const setError = function(error) {
-    this.error = error;
+    this.errorMessage = error;
   };
   
   
@@ -25,7 +25,7 @@ const Store = (function() {
   return{
     bookmarks: [],
     addingBookmark: false,
-    errorMessage: '',
+    errorMessage: null,
     filterValue: 1,
     
     
