@@ -1,7 +1,7 @@
 'use strict';
 
 $(document).ready(function() {
-  DomManipulators.render();
+  // DomManipulators.render();
   DomManipulators.handleItAll();
   
   Api.getBookmarkData((bookmarks) => {
